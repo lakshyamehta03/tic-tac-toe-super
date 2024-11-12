@@ -13,6 +13,7 @@ const cardTypes = [
 const weightedCardTypes = cardTypes.flatMap(card => Array(card.rarity).fill(card));
 
 function App() {
+  const [difficulty, setDifficulty] = useState('Easy');
   const [board, setBoard] = useState(Array(9).fill(null));
   const [player, setPlayer] = useState("X");
   const [playerXCards, setPlayerXCards] = useState([]);
@@ -24,6 +25,22 @@ function App() {
     drawCardsForPlayer("X");
     drawCardsForPlayer("O");
   }, []);
+
+  const handleDifficultyChange = (event) => {
+    setDifficulty(event.target.value);
+  };
+
+  const aiMove = () => {
+    // AI logic based on difficulty
+    if (difficulty === 'Easy') {
+      // Easy difficulty logic
+    } else if (difficulty === 'Medium') {
+      // Medium difficulty logic
+    } else if (difficulty === 'Hard') {
+      // Hard difficulty logic
+    }
+    // Update game state after AI move
+  };
 
   const drawRandomCard = (playerSymbol) => {
     const randomCard = weightedCardTypes[Math.floor(Math.random() * weightedCardTypes.length)];
@@ -119,36 +136,37 @@ function App() {
 
   const attackOpponent = (card, updatedBoard, index, player) => {
     const directions = {
-      '↖': [-1, -1], '↑': [-3, 0], '↗': [-1, 1],
+      '↖': [-1, -1], '↑': [-1, 0], '↗': [-1, 1],
       '←': [0, -1], '→': [0, 1], '↙': [1, -1],
       '↓': [1, 0], '↘': [1, 1]
     };
-
+  
     const [rowChange, colChange] = directions[card.direction] || [0, 0];
     const opponentSymbol = player === 'X' ? 'O' : 'X';
-
+  
     let row = Math.floor(index / 3);
     let col = index % 3;
-
+  
     // Loop to find and destroy the next opponent's card in the given direction
     while (true) {
       row += rowChange;
       col += colChange;
-
+  
       // Check if the new position is out of bounds
       if (row < 0 || row > 2 || col < 0 || col > 2) break;
-
+  
       const newIndex = row * 3 + col;
-
+  
       // Stop if the position is empty or not an opponent's card
-      if (updatedBoard[newIndex] === null) break;
+      if (!updatedBoard[newIndex]) break;
       if (updatedBoard[newIndex]?.playerSymbol !== opponentSymbol) break;
-
+  
       // Destroy the opponent's card (only the first one encountered in that direction)
       updatedBoard[newIndex] = null;
       break;
     }
   };
+  
 
   const lightningBolt = (card, updatedBoard, index) => {
     const directions = {
