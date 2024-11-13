@@ -10,7 +10,8 @@ const Board = ({ board, onCellClick }) => {
             <div className={`card ${cell.type}`}>
               <span className="player-symbol">{cell.playerSymbol}</span>
               <div className="card-info">
-                <span>{cell.name}</span>
+                {/* Render the card's name, type, and direction only if they exist */}
+                {cell.name && <span>{cell.name}</span>}
                 {cell.direction && <span>{cell.direction}</span>}
               </div>
             </div>

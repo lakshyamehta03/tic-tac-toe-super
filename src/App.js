@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import GamePage from './GamePage';
 import HomePage from './HomePage';
+import { getAIMove } from './ai'; // Import the AI module
 
 const cardTypes = [
   { type: 'normal', name: 'Normal', rarity: 5 },
@@ -32,16 +33,42 @@ function App() {
   };
 
   const aiMove = () => {
-    // AI logic based on difficulty
-    if (difficulty === 'Easy') {
-      // Easy difficulty logic
-    } else if (difficulty === 'Medium') {
-      // Medium difficulty logic
-    } else if (difficulty === 'Hard') {
-      // Hard difficulty logic
-    }
-    // Update game state after AI move
+    setTimeout(() => {// Get the AI's move and card index from the getAIMove function
+      const { move, cardIndex } = getAIMove(board, playerOCards, "O", difficulty);
+
+      // Make a copy of the board
+      const updatedBoard = [...board];
+
+      // Get the card the AI selected from its stash
+      const selectedCard = playerOCards[cardIndex];
+
+      // Place the full card object on the board (including its type, direction, etc.)
+      updatedBoard[move] = { ...selectedCard, playerSymbol: "O" };  // Make sure to use "O" for AI
+
+      // Update the board state with the new move
+      setBoard(updatedBoard);
+
+      // Remove the used card from the AI's stash
+      replaceUsedCard(cardIndex, "O");
+
+      // Apply any abilities related to the card (attack, lightning, etc.)
+      applyCardAbilities(move, updatedBoard);
+
+      // Check the game result (win, tie, or continue)
+      const gameResult = checkGameStatus(updatedBoard);
+
+      if (!gameResult) {
+          // If no result, switch player turn
+          setPlayer(player === "X" ? "O" : "X");
+      }
+    }, 1000)
   };
+
+  useEffect(() => {
+    if (player === "O" && !winner) {
+      aiMove();  // If it's the AI's turn, trigger AI move
+    }
+  }, [player, winner]);
 
   const drawRandomCard = (playerSymbol) => {
     const randomCard = weightedCardTypes[Math.floor(Math.random() * weightedCardTypes.length)];
