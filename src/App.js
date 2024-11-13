@@ -28,8 +28,8 @@ function App() {
     drawCardsForPlayer("O");
   }, []);
 
-  const handleDifficultyChange = (event) => {
-    setDifficulty(event.target.value);
+  const handleDifficultyChange = (difficultyLevel) => {
+    setDifficulty(difficultyLevel);
   };
 
   const aiMove = () => {
@@ -253,7 +253,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={<HomePage onDifficultyChange={handleDifficultyChange} />}
+        />
         <Route
           path="/game"
           element={
