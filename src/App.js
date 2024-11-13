@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Board from './components/Board';
-import PlayerStash from './components/PlayerStash';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import GamePage from './GamePage';
+import HomePage from './HomePage';
 
 const cardTypes = [
   { type: 'normal', name: 'Normal', rarity: 5 },
@@ -223,29 +224,27 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <PlayerStash
-        player="X"
-        cards={playerXCards}
-        onCardSelect={handleCardSelect}
-        selectedCard={selectedCard}
-        activePlayer={player === "X"}
-      />
-      <Board board={board} onCellClick={handleCellClick} />
-      <PlayerStash
-        player="O"
-        cards={playerOCards}
-        onCardSelect={handleCardSelect}
-        selectedCard={selectedCard}
-        activePlayer={player === "O"}
-      />
-      {winner && (
-        <div>
-          <p>{winner === "Tie" ? "It's a tie!" : `${winner} wins the game!`}</p>
-          <button onClick={resetGame}>Play Again</button>
-        </div>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/game"
+          element={
+            <GamePage
+              board={board}
+              player={player}
+              playerXCards={playerXCards}
+              playerOCards={playerOCards}
+              selectedCard={selectedCard}
+              onCardSelect={handleCardSelect}
+              onCellClick={handleCellClick}
+              resetGame={resetGame}
+              winner={winner}  // Pass winner to GamePage
+            />
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 

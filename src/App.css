@@ -4,6 +4,12 @@
   padding: 0;
 }
 
+.status {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  text-align: center;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f9;
