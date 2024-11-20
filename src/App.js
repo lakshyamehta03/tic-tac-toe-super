@@ -3,12 +3,12 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import GamePage from './GamePage';
 import HomePage from './HomePage';
-import { getAIMove } from './ai'; // Import the AI module
+import { getAIMove } from './ai';
 
 const cardTypes = [
   { type: 'normal', name: 'Normal', rarity: 5 },
   { type: 'attack', name: 'Attack', directions: ['↖', '↑', '↗', '←', '→', '↙', '↓', '↘'], rarity: 3 },
-  { type: 'lightning', name: 'Lightning', directions: ['↑', '↓', '←', '→'], rarity: 2 },
+  { type: 'lightning', name: 'Thunder', directions: ['↑', '↓', '←', '→'], rarity: 2 },
   { type: 'blam', name: 'BLAM!', rarity: 1 },
 ];
 
@@ -33,32 +33,24 @@ function App() {
   };
 
   const aiMove = () => {
-    setTimeout(() => {// Get the AI's move and card index from the getAIMove function
+    setTimeout(() => {
       const { move, cardIndex } = getAIMove(board, playerOCards, "O", difficulty);
 
-      // Make a copy of the board
       const updatedBoard = [...board];
 
-      // Get the card the AI selected from its stash
       const selectedCard = playerOCards[cardIndex];
 
-      // Place the full card object on the board (including its type, direction, etc.)
-      updatedBoard[move] = { ...selectedCard, playerSymbol: "O" };  // Make sure to use "O" for AI
+      updatedBoard[move] = { ...selectedCard, playerSymbol: "O" };
 
-      // Update the board state with the new move
       setBoard(updatedBoard);
 
-      // Remove the used card from the AI's stash
       replaceUsedCard(cardIndex, "O");
 
-      // Apply any abilities related to the card (attack, lightning, etc.)
       applyCardAbilities(move, updatedBoard);
 
-      // Check the game result (win, tie, or continue)
       const gameResult = checkGameStatus(updatedBoard);
 
       if (!gameResult) {
-          // If no result, switch player turn
           setPlayer(player === "X" ? "O" : "X");
       }
     }, 1000)
@@ -66,7 +58,7 @@ function App() {
 
   useEffect(() => {
     if (player === "O" && !winner) {
-      aiMove();  // If it's the AI's turn, trigger AI move
+      aiMove();
     }
   }, [player, winner]);
 
@@ -175,21 +167,17 @@ function App() {
     let row = Math.floor(index / 3);
     let col = index % 3;
   
-    // Loop to find and destroy the next opponent's card in the given direction
     while (true) {
       row += rowChange;
       col += colChange;
   
-      // Check if the new position is out of bounds
       if (row < 0 || row > 2 || col < 0 || col > 2) break;
   
       const newIndex = row * 3 + col;
   
-      // Stop if the position is empty or not an opponent's card
       if (!updatedBoard[newIndex]) break;
       if (updatedBoard[newIndex]?.playerSymbol !== opponentSymbol) break;
   
-      // Destroy the opponent's card (only the first one encountered in that direction)
       updatedBoard[newIndex] = null;
       break;
     }
@@ -213,7 +201,7 @@ function App() {
       while (i >= 0 && i < 3) {
         const nextIndex = i * 3 + col;
         if (updatedBoard[nextIndex]?.playerSymbol === opponentSymbol) {
-          updatedBoard[nextIndex] = null;  // Destroy opponent's card
+          updatedBoard[nextIndex] = null;
         }
         i += rowChange;
       }
@@ -223,7 +211,7 @@ function App() {
       while (i >= 0 && i < 3) {
         const nextIndex = row * 3 + i;
         if (updatedBoard[nextIndex]?.playerSymbol === opponentSymbol) {
-          updatedBoard[nextIndex] = null;  // Destroy opponent's card
+          updatedBoard[nextIndex] = null;
         }
         i += colChange;
       }
@@ -234,7 +222,7 @@ function App() {
     const opponentSymbol = player === 'X' ? 'O' : 'X';
     updatedBoard.forEach((cell, index) => {
       if (cell?.playerSymbol === opponentSymbol) {
-        updatedBoard[index] = null;  // Destroy all opponent's cards
+        updatedBoard[index] = null;
       }
     });
   };
@@ -269,7 +257,7 @@ function App() {
               onCardSelect={handleCardSelect}
               onCellClick={handleCellClick}
               resetGame={resetGame}
-              winner={winner}  // Pass winner to GamePage
+              winner={winner}
             />
           }
         />

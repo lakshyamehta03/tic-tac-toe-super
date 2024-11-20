@@ -23,8 +23,7 @@ const HomePage = ({ onDifficultyChange }) => {
         <label htmlFor="difficulty">Select AI Difficulty: </label>
         <select id="difficulty" value={difficulty} onChange={handleDifficultyChange}>
           <option value="Easy">Easy</option>
-          <option value="Moderate">Moderate</option>
-          <option value="Expert">Expert</option>
+          <option value="Difficult">Difficult</option>
         </select>
       </div>
 
